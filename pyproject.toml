@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "notification-service"
+version = "0.1.0"
+description = "A microservice for notifications such as email, in-app, and push"
+authors = ["Shabel Gumah <shabel500@gmail.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.111.1"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

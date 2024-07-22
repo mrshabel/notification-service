@@ -1,0 +1,22 @@
+services:
+    notification-service-personal:
+        container_name: notification-service-personal
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file: .env
+        ports:
+            - 8007:8000
+        develop:
+            watch:
+                - action: sync
+                  path: ./src
+                  target: /app/src
+                  ignore:
+                      - venv
+
+                - action: rebuild
+                  path: .env
+
+                - action: rebuild
+                  path: pyproject.toml
