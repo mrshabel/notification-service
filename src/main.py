@@ -1,8 +1,10 @@
 from fastapi import FastAPI
+from src.config import settings
+from src.routers import (
+    health_check
+)
 
-app = FastAPI()
+app = FastAPI(title=settings.APP_NAME, summary=settings.APP_DESCRIPTION)
 
-
-@app.get("/")
-async def home():
-    return "This is an index page"
+# include routers
+app.include_router(router=health_check.router, tags=["Health Check Endpoint"])
