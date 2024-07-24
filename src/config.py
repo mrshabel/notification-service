@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Notification Service"
     APP_DESCRIPTION: str = "A microservice for emails, in-app, and push notifications"
     ENVIRONMENT: Environment
+    DATABASE_URL: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
