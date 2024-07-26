@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from enum import Enum
 
+
 class Environment(Enum):
     DEVELOPMENT = "development"
     STAGING = "staging"
@@ -9,10 +10,14 @@ class Environment(Enum):
 
 class Settings(BaseSettings):
     APP_NAME: str = "Notification Service"
-    APP_DESCRIPTION: str = "A microservice for emails, in-app, and push notifications"
+    APP_DESCRIPTION: str = (
+        "A microservice for emails, in-app, and push notifications"
+    )
     ENVIRONMENT: Environment
     DATABASE_URL: str
+    ALEMBIC_DATABASE_URL: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
-settings = Settings()
+
+settings = Settings()  # type: ignore

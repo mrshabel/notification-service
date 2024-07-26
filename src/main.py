@@ -2,9 +2,8 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from src.config import settings
 from src.models.database import database
-from src.routers import (
-    health_check
-)
+from src.routers import health_check, email
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -14,7 +13,13 @@ async def lifespan(app: FastAPI):
     # disconnect db after shutdown
     await database.disconnect()
 
-app = FastAPI(title=settings.APP_NAME, summary=settings.APP_DESCRIPTION, lifespan=lifespan)
+
+app = FastAPI(
+    title=settings.APP_NAME,
+    summary=settings.APP_DESCRIPTION,
+    lifespan=lifespan,
+)
 
 # include routers
 app.include_router(router=health_check.router, tags=["Health Check Endpoint"])
+app.include_router(router=email.router, tags=["Email Endpoints"])
