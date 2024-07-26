@@ -7,18 +7,12 @@ services:
         env_file: .env
         ports:
             - 8003:8000
+        # create bind mount for 2-way sync and watch for development configuration
+        volumes:
+            - ./src:/app/src
+            - ./alembic:/app/alembic:ro # create read-only volume for alembic migrations in development
         develop:
             watch:
-                - action: sync
-                  path: ./src
-                  target: /app/src
-                  ignore:
-                      - venv
-
-                - action: sync+restart
-                  path: ./src/config
-                  target: /app/src/config
-
                 - action: rebuild
                   path: .env
 
