@@ -1,7 +1,8 @@
-from fastapi import APIRouter, status, HTTPException
+from fastapi import APIRouter, status, HTTPException, BackgroundTasks
 from fastapi.logger import logger
 from src.schemas import email as email_schemas
 from src.models.functions import email as email_functions
+from src.utils import email as email_utils
 from pydantic import UUID4
 
 router = APIRouter(prefix="/emails")
@@ -9,7 +10,10 @@ router = APIRouter(prefix="/emails")
 
 # create email
 @router.post("/", response_model=email_schemas.SuccessResponse)
-async def add_one_email(req_data: email_schemas.CreateEmailSchema):
+async def add_one_email(
+    req_data: email_schemas.CreateEmailSchema,
+    background_tasks: BackgroundTasks,
+):
     """Add one email"""
 
     try:
@@ -21,6 +25,19 @@ async def add_one_email(req_data: email_schemas.CreateEmailSchema):
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Failed to add email",
+        )
+
+    try:
+        # send email to recipient
+        subject = "Test Email"
+        background_tasks.add_task(
+            email_utils.send_email, data.recipient, subject
+        )
+    except BaseException:
+        logger.error("Failed to send email", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to send email",
         )
 
     return email_schemas.SuccessResponse(

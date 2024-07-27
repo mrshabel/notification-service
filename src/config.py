@@ -16,6 +16,10 @@ class Settings(BaseSettings):
     ENVIRONMENT: Environment
     DATABASE_URL: str
     ALEMBIC_DATABASE_URL: str
+    SMTP_SERVER: str
+    SMTP_PORT: int
+    SMTP_USERNAME: str
+    SMTP_PASSWORD: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
