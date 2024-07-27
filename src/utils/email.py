@@ -1,10 +1,10 @@
 import smtplib
-from email.message import EmailMessage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pydantic import EmailStr
 from fastapi.logger import logger
 from src.config import settings
+from src.utils import template
 
 
 def send_email(
@@ -18,8 +18,7 @@ def send_email(
     message["To"] = recipient
     message["Subject"] = subject
 
-    message.attach(MIMEText(template, "plain"))
-    # message.attach(MIMEText(template, "html"))
+    message.attach(MIMEText(template, "html"))
 
     try:
         with smtplib.SMTP(settings.SMTP_SERVER, settings.SMTP_PORT) as s:
@@ -56,3 +55,25 @@ def send_email(
     except Exception as e:
         logger.error(msg=f"An error occurred {str(e)}")
         raise
+
+
+def send_welcome_email(recipient: EmailStr):
+    subject: str = "Welcome to Shabel's World"
+    data = {}
+
+    # generate html template
+    html_template = template.generate_template("welcome.html", data=data)
+
+    # send email
+    send_email(recipient=recipient, subject=subject, template=html_template)
+
+
+def send_verify_email(recipient: EmailStr, name: str):
+    subject: str = "Verify your account"
+    data = {"name": name}
+
+    # generate html template
+    html_template = template.generate_template("verify-email.html", data=data)
+
+    # send email
+    send_email(recipient=recipient, subject=subject, template=html_template)

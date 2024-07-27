@@ -1,4 +1,6 @@
-from fastapi import APIRouter, status, HTTPException, BackgroundTasks
+from fastapi import APIRouter, status, HTTPException, BackgroundTasks, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from fastapi.logger import logger
 from src.schemas import email as email_schemas
 from src.models.functions import email as email_functions
@@ -6,6 +8,8 @@ from src.utils import email as email_utils
 from pydantic import UUID4
 
 router = APIRouter(prefix="/emails")
+
+templates = Jinja2Templates(directory="templates")
 
 
 # create email
@@ -29,9 +33,9 @@ async def add_one_email(
 
     try:
         # send email to recipient
-        subject = "Test Email"
+        name = "Test Client"
         background_tasks.add_task(
-            email_utils.send_email, data.recipient, subject
+            email_utils.send_verify_email, data.recipient, name
         )
     except BaseException:
         logger.error("Failed to send email", exc_info=True)
@@ -70,7 +74,7 @@ async def get_all_emails(skip: int = 0, limit: int = 10):
 
 # get by id
 @router.get("/{id}/", response_model=email_schemas.SuccessResponse)
-async def get_one_email_by_id(skip: int, limit: int, id: UUID4):
+async def get_one_email_by_id(id: UUID4):
     """Get one email by id"""
 
     try:
@@ -90,5 +94,15 @@ async def get_one_email_by_id(skip: int, limit: int, id: UUID4):
         )
 
     return email_schemas.SuccessResponse(
-        message="Successfully fetched emails", data=email
+        message="Successfully fetched email", data=email
+    )
+
+
+# get template
+@router.get("/templates/{name}", response_class=HTMLResponse)
+async def get_email_template(request: Request, name: str):
+    return templates.TemplateResponse(
+        request=request,
+        name="verify-email.html",
+        context={"name": name},
     )

@@ -10,6 +10,8 @@ services:
         # create bind mount for 2-way sync and watch for development configuration
         volumes:
             - ./src:/app/src
+            - ./static:/app/static
+            - ./templates:/app/templates
             - ./alembic:/app/alembic:ro # create read-only volume for alembic migrations in development
         develop:
             watch:

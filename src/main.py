@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from src.config import settings
 from src.models.database import database
@@ -19,6 +20,9 @@ app = FastAPI(
     summary=settings.APP_DESCRIPTION,
     lifespan=lifespan,
 )
+
+# mount static files
+app.mount(path="/static", app=StaticFiles(directory="static"), name="static")
 
 # include routers
 app.include_router(router=health_check.router, tags=["Health Check Endpoint"])
