@@ -19,6 +19,7 @@ app = FastAPI(
     title=settings.APP_NAME,
     summary=settings.APP_DESCRIPTION,
     lifespan=lifespan,
+    root_path="/notifications",  # specify root_path to notify application that it's behind a proxy
 )
 
 # mount static files

@@ -1,12 +1,14 @@
 services:
-    notification-service-personal:
-        container_name: notification-service-personal
+    notification-service:
+        container_name: notification-service
         build:
             context: .
             dockerfile: Dockerfile
         env_file: .env
-        ports:
-            - 8003:8000
+        expose:
+            - 8000
+        networks:
+            - microservices
         # create bind mount for 2-way sync and watch for development configuration
         volumes:
             - ./src:/app/src
