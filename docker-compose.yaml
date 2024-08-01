@@ -1,6 +1,6 @@
 services:
-    notification-service:
-        container_name: notification-service
+    notification-service-sg:
+        container_name: notification-service-sg
         build:
             context: .
             dockerfile: Dockerfile
