@@ -1,0 +1,9 @@
+services:
+    email-worker:
+        container_name: email_worker
+        build:
+            context: .
+            dockerfile: Dockerfile
+        env_file: .env
+        volumes:
+            - ../../templates:/mnt/templates
