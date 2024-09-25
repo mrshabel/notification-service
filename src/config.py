@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     SMTP_PORT: int
     SMTP_USERNAME: str
     SMTP_PASSWORD: str
+    BROKER_HOST: str
+    BROKER_PORT: int
 
     model_config = SettingsConfigDict(env_file=".env")
 
