@@ -8,7 +8,7 @@ from threading import Thread
 from src.schemas.events import AuthEvents, Exchanges, Queues, ExchangeTypes
 from src.events.handlers import AuthEventHandler
 
-logging.basicConfig(level=logging.ERROR)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("pika")
 
 
@@ -66,6 +66,7 @@ class NotificationEventBus:
         self.channel.exchange_declare(
             exchange=Exchanges.AUTH.value,
             exchange_type=ExchangeTypes.AUTH.value,
+            durable=True
         )
 
         # auth bindings
@@ -91,11 +92,14 @@ class NotificationEventBus:
 
             # handle auth events
             if method.routing_key.startswith("auth"):
-                AuthEventHandler.process_event(body=body)
+                data = AuthEventHandler.process_event(body=body)
+                print(data, flush=True)
                 logger.info("Sent to auth handler")
-            
+
             else:
-                logger.warning(f"No handler implemented for event with routing key: {method.routing_key}")
+                logger.warning(
+                    f"No handler implemented for event with routing key: {method.routing_key}"
+                )
 
             # send acknowledgement that message is done processing
             ch.basic_ack(delivery_tag=method.delivery_tag)
