@@ -22,6 +22,13 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str
     BROKER_HOST: str
     BROKER_PORT: int
+    NOTIFICATION_EXCHANGE: str = "notification_events"
+    NOTIFICATION_QUEUE: str = "notification_queue"
+    NOTIFICATION_EXCHANGE_TYPE: str = (
+        "topic"  # allows chaining of routing keys
+    )
+    AUTH_EXCHANGE: str = "auth_events"
+    EMAIL_ROUTING_KEY: str = "email"
 
     model_config = SettingsConfigDict(env_file=".env")
 

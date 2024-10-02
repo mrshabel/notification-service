@@ -1,4 +1,5 @@
 from pika import BlockingConnection, ConnectionParameters
+from pika.adapters.blocking_connection import BlockingChannel
 from src.config import settings
 from fastapi.logger import logger
 
@@ -15,7 +16,7 @@ def start_broker_connection():
     logger.info("Message broker successfully connected")
 
 
-def get_broker_channel():
+def get_broker_channel() -> BlockingChannel | None:
     """
     Retrieve the current communication channel to process all requests
     """

@@ -6,4 +6,5 @@ services:
             dockerfile: Dockerfile
         env_file: .env
         volumes:
+            - ./:/app
             - ../../templates:/mnt/templates

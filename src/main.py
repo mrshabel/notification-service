@@ -7,22 +7,26 @@ from src.routers import health_check, email
 from src.events import (
     start_broker_connection,
     close_broker_connection,
-    consumers
 )
+from src.events.consumers.event_bus import NotificationEventBus
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    event_bus = NotificationEventBus()
+
     # connect db before application starts
     await database.connect()
     # run primary connection for all producers on main thread
     start_broker_connection()
 
-    # run app main consumer
-    consumers.start_main_consumer()
+    # start event bus
+    event_bus.start()
     yield
     # disconnect db after shutdown
     await database.disconnect()
     close_broker_connection()
+    event_bus.disconnect()
 
 
 app = FastAPI(
