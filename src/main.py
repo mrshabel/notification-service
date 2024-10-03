@@ -15,18 +15,26 @@ from src.events.consumers.event_bus import NotificationEventBus
 async def lifespan(app: FastAPI):
     event_bus = NotificationEventBus()
 
+    # start event bus
+    event_bus.start()
+
     # connect db before application starts
     await database.connect()
     # run primary connection for all producers on main thread
     start_broker_connection()
 
-    # start event bus
-    event_bus.start()
+    # store event bus state throughout the application lifecycle
+    app.state.event_bus = event_bus
+
     yield
+    # gracefully shutdown event bus before main application
+    if hasattr(app.state, "event_bus"):
+        event_bus.stop()
+        print(app.state.event_bus)
+
     # disconnect db after shutdown
     await database.disconnect()
     close_broker_connection()
-    event_bus.disconnect()
 
 
 app = FastAPI(
