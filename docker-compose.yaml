@@ -10,9 +10,7 @@ services:
         # create bind mount for 2-way sync and watch for development configuration
         volumes:
             - ./src:/app/src
-            - ./static:/app/static
-            - ./templates:/app/templates
-            - ./alembic:/app/alembic:ro # create read-only volume for alembic migrations in development
+            - ./migrations:/app/migrations:ro # create read-only volume for alembic migrations in development
         develop:
             watch:
                 - action: rebuild
@@ -20,3 +18,16 @@ services:
 
                 - action: rebuild
                   path: pyproject.toml
+
+    email-worker:
+        container_name: email_worker
+        build:
+            context: ./workers/email_worker
+            dockerfile: Dockerfile
+        env_file: .env
+        volumes:
+            - ./workers/email_worker:/app
+            - ./templates:/${STORAGE_PATH}/templates
+
+volumes:
+    templates:

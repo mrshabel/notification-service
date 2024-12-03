@@ -60,12 +60,12 @@ class NotificationEventBus:
     def disconnect(self):
         try:
             if self.channel and self.channel.is_open:
-                    self.channel.close()
-                    self.channel = None
+                self.channel.close()
+                self.channel = None
 
             if self.connection and self.connection.is_open:
-                    self.connection.close()
-                    self.connection = None
+                self.connection.close()
+                self.connection = None
 
             logger.info("Disconnected from event bus")
         except Exception as e:
@@ -162,6 +162,7 @@ class NotificationEventBus:
         # block all waiting threads
         self._stop_event.clear()
 
+        # run thread as daemon: shutdown thread when main thread stops
         self._thread = Thread(target=self._start_consuming, daemon=True)
         self._thread.start()
 

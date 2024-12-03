@@ -14,6 +14,7 @@ class Config():
     EMAIL_QUEUE: str = "email_queue"
     NOTIFICATION_EXCHANGE: str = "notifications"
     EMAIL_ROUTING_KEY: str = "email"
+    APP_NAME: str = "Tetelestai"
 
 
 AppConfig = Config()

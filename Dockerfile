@@ -1,7 +1,6 @@
 # an intermediate build stage to avoid having poetry and its dependencies in the final image
 FROM python:3.11-slim as requirements-stage
 
-# 
 WORKDIR /tmp
 
 # install poetry
@@ -13,7 +12,9 @@ COPY ./pyproject.toml ./poetry.lock* /tmp/
 # export the dependencies (with dev dependencies) into a requirements.txt file
 RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --with dev
 
-# 
+
+
+# final stage
 FROM python:3.11-slim
 
 # set maintainer information
@@ -29,10 +30,11 @@ COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 RUN apt-get update && apt-get install make
 
 # install all dependencies
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# copy code
-COPY . /app/
+# copy source code and migration scripts
+COPY ./src /app/src
+COPY ./migrations /app/migrations
 
 # create non-root user to run the application
 RUN useradd --create-home appuser

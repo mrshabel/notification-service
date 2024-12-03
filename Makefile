@@ -6,11 +6,12 @@ FLAKE8 = flake8
 BLACK = black
 ALEMBIC = alembic
 DOCKER_COMPOSE = docker compose
-CONTAINER = notification-service-personal
+CONTAINER = notification-service-sg
 
 # declare phony target to avoid make from referencing actual files
 .PHONY: lint format migrate all
 
+# TODO: use ruff for linting and formatting
 # lint code with flake8
 lint:
 	@echo "--------------------"
