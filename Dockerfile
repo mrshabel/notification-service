@@ -32,9 +32,10 @@ RUN apt-get update && apt-get install make
 # install all dependencies
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# copy source code and migration scripts
+# copy source code and required scripts
 COPY ./src /app/src
 COPY ./migrations /app/migrations
+COPY ./Makefile /app
 
 # create non-root user to run the application
 RUN useradd --create-home appuser

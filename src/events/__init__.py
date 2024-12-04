@@ -3,7 +3,7 @@ from pika.adapters.blocking_connection import BlockingChannel
 from src.config import settings
 from fastapi.logger import logger
 
-connection: BlockingConnection
+connection: BlockingConnection | None = None
 
 
 def start_broker_connection():

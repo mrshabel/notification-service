@@ -1,16 +1,30 @@
-from . import BaseConsumer
 from src.config import settings
+
+# from fastapi.logger import logger
 from pika import BlockingConnection, ConnectionParameters
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Basic, BasicProperties
 import logging
 from threading import Thread, Event
 from src.schemas.events import AuthEvents, Exchanges, Queues, ExchangeTypes
-from src.events.handlers import AuthEventHandler
+from src.events.auth_handler import AuthEventHandler
 import time
 
-# logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("pika")
+
+# create a stream handler instance for pika client
+logger = logging.getLogger("events")
+logger.setLevel(logging.INFO)
+
+# flush logs to console
+handler = logging.StreamHandler()
+handler.setFormatter(
+    logging.Formatter(
+        "{levelname}:     {message}",
+        style="{",
+        datefmt="%Y-%m-%d %H:%M",
+    )
+)
+logger.addHandler(handler)
 
 
 class NotificationEventBus:
@@ -40,7 +54,7 @@ class NotificationEventBus:
 
             # declare queue and exchange bindings
             self._setup_bindings()
-            logger.info("Connected to event bus successfully")
+            logger.info("Connected to event bus")
         except Exception as e:
             logger.error(f"Event bus connection error: {e}")
             raise e
@@ -112,7 +126,7 @@ class NotificationEventBus:
                 data = AuthEventHandler.process_event(body=body)
                 print(data, flush=True)
                 logger.info("Sent to auth handler")
-
+            # TODO: handle events from api endpoint
             else:
                 logger.warning(
                     f"No handler implemented for event with routing key: {method.routing_key}"

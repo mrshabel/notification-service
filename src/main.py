@@ -7,7 +7,7 @@ from src.events import (
     start_broker_connection,
     close_broker_connection,
 )
-from src.events.consumers.event_bus import NotificationEventBus
+from src.events.event_bus import NotificationEventBus
 
 
 @asynccontextmanager
@@ -29,7 +29,6 @@ async def lifespan(app: FastAPI):
     # gracefully shutdown event bus before main application
     if hasattr(app.state, "event_bus"):
         event_bus.stop()
-        print(app.state.event_bus)
 
     # disconnect db after shutdown
     await database.disconnect()

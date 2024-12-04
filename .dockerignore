@@ -1,5 +1,6 @@
 # git files
 .gitignore
+.git/
 
 #others
 diagrams
