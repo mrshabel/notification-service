@@ -15,7 +15,7 @@ def start_email_consumer():
     channel = connection.channel()
 
     # REFACTOR: move declarations into definitions.json to declare the configuration on application startup rather than allowing individual clients to do so
-    channel.exchange_declare(exchange=AppConfig.NOTIFICATION_EXCHANGE, exchange_type="direct")
+    channel.exchange_declare(exchange=AppConfig.NOTIFICATION_EXCHANGE, exchange_type="topic")
 
     channel.queue_declare(queue=AppConfig.EMAIL_QUEUE)
 

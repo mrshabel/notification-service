@@ -13,7 +13,7 @@ class Config():
     STORAGE_PATH: str = os.environ["STORAGE_PATH"]
     EMAIL_QUEUE: str = "email_queue"
     NOTIFICATION_EXCHANGE: str = "notifications"
-    EMAIL_ROUTING_KEY: str = "email"
+    EMAIL_ROUTING_KEY: str = "notification.*.email" #notification.<source>.email
     APP_NAME: str = "Tetelestai"
 
 
